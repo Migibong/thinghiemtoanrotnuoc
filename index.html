@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Thí Nghiệm Giảng Dạy: Thử Thách Rót Nước</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .water-wave {
+            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes flowAnimation {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(40px); opacity: 0; }
+        }
+        .water-stream {
+            animation: flowAnimation 0.8s infinite linear;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 25px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(79, 70, 229, 0.8); }
+        }
+        .active-jug { animation: pulse-glow 2s infinite; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-sky-50 to-blue-100 min-h-screen text-slate-800 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <audio id="water-sound" preload="auto" src="https://res.cloudinary.com/dxmptlk5g/video/upload/v1790589404/tieng_rot_nuoc_chay_oc_oc_oc_xch0rv.mp3"></audio>
+
+    <header class="bg-white/95 backdrop-blur-md shadow-sm border-b border-indigo-100 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-3 rounded-2xl shadow-lg shadow-indigo-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-extrabold text-indigo-950">Phòng Thí Nghiệm Trực Quan Toán Học</h1>
+                    <p class="text-xs sm:text-sm text-indigo-600 font-semibold">Công cụ trình chiếu bảng cho Giáo viên (Âm thanh rót nước tối ưu ngắn gọn)</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 flex-wrap justify-center">
+                <div class="bg-indigo-50 border border-indigo-200 p-1.5 rounded-2xl flex items-center gap-1 shadow-sm">
+                    <button id="tab-challenge-1" onclick="switchChallenge('1')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md">
+                        Thử thách 1: Can 4L & 5L (Lấy 3L)
+                    </button>
+                    <button id="tab-challenge-2" onclick="switchChallenge('2')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-700 hover:bg-indigo-100">
+                        Thử thách 2: Can 3L & 5L (Lấy 1L)
+                    </button>
+                </div>
+                
+                <button onclick="resetExperiment()" class="p-2.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 shadow-sm transition-all" title="Làm lại từ đầu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <div class="lg:col-span-8 flex flex-col gap-6">
+            
+            <div class="bg-white p-6 rounded-3xl shadow-xl shadow-indigo-100/50 border-2 border-indigo-100 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 text-indigo-50 opacity-50 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-48 w-48" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                </div>
+                
+                <div class="flex items-center justify-between mb-3">
+                    <span id="step-badge" class="px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md">Bước 0 / 4</span>
+                    <span id="step-title" class="text-xs font-bold text-indigo-800 uppercase tracking-wider">Trạng thái ban đầu</span>
+                </div>
+                
+                <h2 id="step-heading" class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2">Bắt đầu thí nghiệm</h2>
+                <p id="step-description" class="text-base sm:text-lg text-slate-600 leading-relaxed font-medium">
+                    Hai can đang trống. Thầy cô bấm nút <span class="text-indigo-600 font-bold">"Bước tiếp →"</span> để trình diễn thao tác rót nước cho học sinh quan sát.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-xl shadow-indigo-100/50 border border-indigo-100 flex flex-col items-center relative min-h-[400px] justify-center">
+                
+                <div class="absolute top-4 left-6 flex items-center gap-2 bg-sky-50 px-3.5 py-1.5 rounded-xl border border-sky-200">
+                    <div class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-ping"></div>
+                    <span id="source-label" class="text-xs font-bold text-sky-800">Bể chứa nước sẵn sàng</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-12 sm:gap-24 my-6 w-full max-w-lg justify-items-center">
+                    
+                    <div id="jug-container-left" class="flex flex-col items-center transition-all duration-300">
+                        <div class="text-center mb-3">
+                            <span id="label-jug-left-name" class="font-extrabold text-slate-800 text-xl">Can 4 Lít</span>
+                            <div class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-0.5 rounded-full mt-1 border border-indigo-100">
+                                <span id="val-left" class="text-base font-extrabold">0</span> / <span id="max-left">4</span> lít
+                            </div>
+                        </div>
+                        
+                        <div class="relative w-32 h-52 sm:w-36 sm:h-60 bg-slate-100 border-4 border-slate-300 rounded-b-3xl rounded-t-lg overflow-hidden flex flex-col justify-end shadow-inner">
+                            <div id="water-left" class="water-wave w-full bg-blue-500/90 relative flex items-center justify-center shadow-lg" style="height: 0%;">
+                                <div class="absolute inset-0 bg-blue-400/40 animate-pulse"></div>
+                                <span id="label-water-left" class="relative z-10 text-white font-black text-lg drop-shadow-md"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="jug-container-right" class="flex flex-col items-center transition-all duration-300">
+                        <div class="text-center mb-3">
+                            <span class="font-extrabold text-slate-800 text-xl">Can 5 Lít</span>
+                            <div class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-0.5 rounded-full mt-1 border border-indigo-100">
+                                <span id="val-right" class="text-base font-extrabold">0</span> / 5 lít
+                            </div>
+                        </div>
+                        
+                        <div class="relative w-36 h-60 sm:w-40 sm:h-68 bg-slate-100 border-4 border-slate-300 rounded-b-3xl rounded-t-lg overflow-hidden flex flex-col justify-end shadow-inner">
+                            <div id="water-right" class="water-wave w-full bg-indigo-600/90 relative flex items-center justify-center shadow-lg" style="height: 0%;">
+                                <div class="absolute inset-0 bg-indigo-500/40 animate-pulse"></div>
+                                <span id="label-water-right" class="relative z-10 text-white font-black text-lg drop-shadow-md"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="success-banner" class="absolute inset-x-6 bottom-4 bg-emerald-500 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between transform translate-y-24 opacity-0 transition-all duration-500 pointer-events-none">
+                    <div class="flex items-center gap-3">
+                        <div class="text-2xl">🎉</div>
+                        <div>
+                            <h4 id="success-title" class="font-bold text-sm">Thành công! Đã lấy được chính xác số lít nước yêu cầu</h4>
+                            <p id="success-desc" class="text-xs text-emerald-100">Học sinh quan sát rõ thao tác và số lít nước còn lại trong can.</p>
+                        </div>
+                    </div>
+                    <button onclick="resetExperiment()" class="px-4 py-2 bg-white text-emerald-700 font-bold rounded-xl text-xs hover:bg-emerald-50 transition pointer-events-auto">Xem lại từ đầu</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            
+            <div class="bg-white p-6 rounded-3xl shadow-xl shadow-indigo-100/50 border-2 border-indigo-100 flex flex-col gap-5">
+                <div class="flex items-center justify-between border-b border-indigo-50 pb-3">
+                    <h3 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Bảng Điều Khiển Giảng Dạy
+                    </h3>
+                    <span id="current-step-text" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200">Bước 0/4</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="prevStep()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-2xl transition flex items-center justify-center gap-1 shadow-sm active:scale-95">
+                        ← Bước trước
+                    </button>
+                    <button onclick="nextStep()" class="py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-indigo-200 transition flex items-center justify-center gap-1 active:scale-95">
+                        Bước tiếp →
+                    </button>
+                </div>
+
+                <button onclick="toggleAutoPlay()" id="btn-autoplay" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white text-xs font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-2 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span id="autoplay-label">Tự động trình chiếu cho học sinh</span>
+                </button>
+
+                <div class="border-t border-indigo-50 pt-4">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Tóm tắt các bước trên bảng:</h4>
+                    <div id="steps-summary-list" class="flex flex-col gap-2 text-xs max-h-60 overflow-y-auto pr-1">
+                        </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-6 rounded-3xl shadow-xl">
+                <h4 class="font-extrabold text-sm mb-2 flex items-center gap-2">
+                    <span class="text-amber-400 text-base">💡</span> Gợi ý câu hỏi cho Giáo viên
+                </h4>
+                <ul id="teacher-tips-list" class="text-xs text-indigo-100 space-y-2.5 leading-relaxed">
+                    </ul>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-xs font-semibold text-slate-400 border-t border-indigo-50">
+        Phòng Thí Nghiệm Trực Quan Dành Cho Giáo Viên • Thiết kế chuẩn chương trình Toán Tiểu học
+    </footer>
+
+    <script>
+        // State variables
+        let currentChallenge = '1'; // '1' = 4L & 5L (get 3L), '2' = 3L & 5L (get 1L)
+        let currentStepIndex = 0;
+        let isAutoPlaying = false;
+        let autoPlayTimer = null;
+        let soundTimeout = null;
+
+        // Challenge definitions
+        const challenges = {
+            '1': {
+                name: 'Thử thách 1: Can 4L và 5L (Lấy 3L nước)',
+                jugLeftName: 'Can 4 Lít',
+                maxLeft: 4,
+                maxRight: 5,
+                successText: 'Thành công! Quan sát can 4 lít chứa đúng 3 lít nước theo yêu cầu.',
+                tips: [
+                    '<strong>Trước khi làm:</strong> "Đố cả lớp làm thế nào với 2 can 4L và 5L mà múc được đúng 3L nước?"',
+                    '<strong>Ở bước cuối:</strong> "Can 5L đã có sẵn 4L, ta đổ thêm 1L từ can 4L sang cho đầy 5L, hỏi can 4L còn mấy lít?"'
+                ],
+                steps: [
+                    {
+                        title: "Trạng thái ban đầu",
+                        heading: "Bắt đầu thí nghiệm với 2 can rỗng",
+                        desc: "Cả can 4 lít và can 5 lít đều đang trống. Ta cần lấy ra chính xác 3 lít nước từ bể.",
+                        left: 0, right: 0
+                    },
+                    {
+                        title: "Bước 1: Đổ đầy can 4L",
+                        heading: "Múc nước đổ đầy can 4 lít",
+                        desc: "Múc nước từ bể đổ đầy can 4 lít. Lúc này can 4L chứa 4 lít, can 5L chứa 0 lít.",
+                        left: 4, right: 0
+                    },
+                    {
+                        title: "Bước 2: Đổ sang can 5L",
+                        heading: "Đổ toàn bộ 4 lít từ can 4L sang can 5L",
+                        desc: "Đổ hết số nước từ can 4 lít sang can 5 lít. Can 5 lít đang chứa 4 lít, can 4 lít trở lại trống (0 lít).",
+                        left: 0, right: 4
+                    },
+                    {
+                        title: "Bước 3: Đổ đầy can 4L lần nữa",
+                        heading: "Tiếp tục múc đầy can 4 lít từ bể",
+                        desc: "Lại đổ đầy nước vào can 4 lít. Can 4L chứa 4 lít, và can 5L vẫn đang chứa 4 lít từ bước trước.",
+                        left: 4, right: 4
+                    },
+                    {
+                        title: "Bước 4: Hoàn thành thử thách",
+                        heading: "Đổ nước từ can 4L sang can 5L cho đến khi đầy",
+                        desc: "Vì can 5L đã chứa 4L, nó chỉ nhận thêm đúng 1L là đầy (5L). Số nước còn lại trong can 4L chính là: 4 - 1 = 3 lít!",
+                        left: 3, right: 5, success: true
+                    }
+                ]
+            },
+            '2': {
+                name: 'Thử thách 2: Can 3L và 5L (Lấy 1L nước)',
+                jugLeftName: 'Can 3 Lít',
+                maxLeft: 3,
+                maxRight: 5,
+                successText: 'Thành công! Quan sát can 3 lít chứa đúng 1 lít nước theo yêu cầu.',
+                tips: [
+                    '<strong>Trước khi làm:</strong> "Bây giờ chúng ta đổi sang 2 can mới: can 3 lít và can 5 lít. Làm sao để lấy được đúng 1 lít nước?"',
+                    '<strong>Ở bước cuối:</strong> "Can 5L có sẵn 3L, đổ thêm 2L từ can 3L sang cho đầy 5L, thì can 3L còn lại mấy lít?"'
+                ],
+                steps: [
+                    {
+                        title: "Trạng thái ban đầu",
+                        heading: "Bắt đầu thí nghiệm với 2 can rỗng (3L và 5L)",
+                        desc: "Cả can 3 lít và can 5 lít đều đang trống. Ta cần lấy ra chính xác 1 lít nước từ bể.",
+                        left: 0, right: 0
+                    },
+                    {
+                        title: "Bước 1: Đổ đầy can 3L",
+                        heading: "Múc nước đổ đầy can 3 lít",
+                        desc: "Múc nước từ bể đổ đầy can 3 lít. Lúc này can 3L chứa 3 lít, can 5L chứa 0 lít.",
+                        left: 3, right: 0
+                    },
+                    {
+                        title: "Bước 2: Đổ sang can 5L",
+                        heading: "Đổ toàn bộ 3 lít từ can 3L sang can 5L",
+                        desc: "Đổ hết số nước từ can 3 lít sang can 5 lít. Can 5 lít đang chứa 3 lít, can 3 lít trở lại trống (0 lít).",
+                        left: 0, right: 3
+                    },
+                    {
+                        title: "Bước 3: Đổ đầy can 3L lần nữa",
+                        heading: "Tiếp tục múc đầy can 3 lít từ bể",
+                        desc: "Lại đổ đầy nước vào can 3 lít. Can 3L chứa 3 lít, và can 5L đang chứa 3 lít từ bước trước.",
+                        left: 3, right: 3
+                    },
+                    {
+                        title: "Bước 4: Hoàn thành thử thách",
+                        heading: "Đổ nước từ can 3L sang can 5L cho đến khi đầy",
+                        desc: "Vì can 5L đã chứa 3L, nó chỉ nhận thêm đúng 2L là đầy (5L). Số nước còn lại trong can 3L chính là: 3 - 2 = 1 lít!",
+                        left: 1, right: 5, success: true
+                    }
+                ]
+            }
+        };
+
+        // Play water pouring sound effect (shortened & synced to 1.5 seconds)
+        function playWaterSound() {
+            const audio = document.getElementById('water-sound');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => {
+                    console.log("Audio play prevented or needs user interaction first:", e);
+                });
+
+                if (soundTimeout) clearTimeout(soundTimeout);
+                soundTimeout = setTimeout(() => {
+                    audio.pause();
+                }, 1500); // Tự động ngắt sau 1.5 giây để khớp nhịp thao tác
+            }
+        }
+
+        function switchChallenge(challengeId) {
+            stopAutoPlay();
+            currentChallenge = challengeId;
+            currentStepIndex = 0;
+
+            const btn1 = document.getElementById('tab-challenge-1');
+            const btn2 = document.getElementById('tab-challenge-2');
+            if (challengeId === '1') {
+                btn1.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md";
+                btn2.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-700 hover:bg-indigo-100";
+            } else {
+                btn2.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md";
+                btn1.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all text-indigo-700 hover:bg-indigo-100";
+            }
+
+            updateStep();
+        }
+
+        function updateStep(playSound = true) {
+            const challenge = challenges[currentChallenge];
+            const steps = challenge.steps;
+            if (currentStepIndex >= steps.length) currentStepIndex = steps.length - 1;
+            if (currentStepIndex < 0) currentStepIndex = 0;
+
+            const step = steps[currentStepIndex];
+
+            if (playSound && currentStepIndex > 0) {
+                playWaterSound();
+            }
+
+            document.getElementById('label-jug-left-name').innerText = challenge.jugLeftName;
+            document.getElementById('max-left').innerText = challenge.maxLeft;
+
+            document.getElementById('step-badge').innerText = `Bước ${currentStepIndex} / ${steps.length - 1}`;
+            document.getElementById('current-step-text').innerText = `Bước ${currentStepIndex}/${steps.length - 1}`;
+            document.getElementById('step-title').innerText = step.title;
+            document.getElementById('step-heading').innerText = step.heading;
+            document.getElementById('step-description').innerText = step.desc;
+
+            const leftVal = step.left;
+            const rightVal = step.right;
+            const pctLeft = (leftVal / challenge.maxLeft) * 100;
+            const pctRight = (rightVal / 5) * 100;
+
+            document.getElementById('water-left').style.height = pctLeft + '%';
+            document.getElementById('water-right').style.height = pctRight + '%';
+            document.getElementById('val-left').innerText = leftVal;
+            document.getElementById('val-right').innerText = rightVal;
+            document.getElementById('label-water-left').innerText = leftVal > 0 ? leftVal + 'L' : '';
+            document.getElementById('label-water-right').innerText = rightVal > 0 ? rightVal + 'L' : '';
+
+            const successBanner = document.getElementById('success-banner');
+            if (step.success) {
+                successBanner.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                successBanner.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                successBanner.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                successBanner.classList.remove('translate-y-0', 'opacity-100');
+            }
+
+            const tipsContainer = document.getElementById('teacher-tips-list');
+            tipsContainer.innerHTML = challenge.tips.map(tip => `
+                <li class="flex items-start gap-2">
+                    <span class="text-indigo-400 font-bold">•</span>
+                    <span>${tip}</span>
+                </li>
+            `).join('');
+
+            renderStepsSummary();
+        }
+
+        function renderStepsSummary() {
+            const challenge = challenges[currentChallenge];
+            const steps = challenge.steps;
+            const container = document.getElementById('steps-summary-list');
+            container.innerHTML = steps.map((s, idx) => {
+                const isActive = idx === currentStepIndex;
+                const isPassed = idx < currentStepIndex;
+                return `
+                    <div onclick="jumpToStep(${idx})" class="p-2 rounded-xl cursor-pointer transition flex items-center justify-between border ${isActive ? 'bg-indigo-50 border-indigo-300 font-bold text-indigo-900 shadow-sm' : isPassed ? 'bg-slate-50 border-slate-200 text-slate-600' : 'bg-white border-slate-100 text-slate-400'}">
+                        <span class="truncate">B.${idx}: ${s.title.split(':')[1] || s.title}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded ${isActive ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'}">${challenge.maxLeft}L:${s.left}L | 5L:${s.right}L</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function nextStep() {
+            const challenge = challenges[currentChallenge];
+            const steps = challenge.steps;
+            if (currentStepIndex < steps.length - 1) {
+                currentStepIndex++;
+                updateStep(true);
+            } else {
+                stopAutoPlay();
+            }
+        }
+
+        function prevStep() {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                updateStep(false);
+            }
+        }
+
+        function jumpToStep(idx) {
+            currentStepIndex = idx;
+            updateStep(false);
+        }
+
+        function resetExperiment() {
+            stopAutoPlay();
+            currentStepIndex = 0;
+            updateStep(false);
+        }
+
+        function toggleAutoPlay() {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+
+        function startAutoPlay() {
+            isAutoPlaying = true;
+            document.getElementById('autoplay-label').innerText = "Tạm dừng trình chiếu";
+            const challenge = challenges[currentChallenge];
+            const steps = challenge.steps;
+            if (currentStepIndex >= steps.length - 1) {
+                currentStepIndex = 0;
+                updateStep(false);
+            }
+            autoPlayTimer = setInterval(() => {
+                if (currentStepIndex < steps.length - 1) {
+                    currentStepIndex++;
+                    updateStep(true);
+                } else {
+                    stopAutoPlay();
+                }
+            }, 3500);
+        }
+
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            document.getElementById('autoplay-label').innerText = "Tự động trình chiếu cho học sinh";
+            if (autoPlayTimer) clearInterval(autoPlayTimer);
+        }
+
+        window.onload = function() {
+            updateStep(false);
+        }
+    </script>
+</body>
+</html>
